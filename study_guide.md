@@ -37,6 +37,23 @@ https://launchschool.com/books/sql/read/preparations
 
 - "It is used as a clause within a `SELECT` statement to identify the table from which to retrieve the data.
 
+### WHERE
+
+- Logical operators `OR` `AND` `NOT`
+
+- For operators, all are the same for Ruby *except* `=`, which is used as `equal to?`
+
+- Cannot use `= NULL`, must use `IS NULL` or `IS NOT NULL`
+
+- LIKE is used to match against a part of a string. `ILIKE` is similar to `/regex/i`
+
+    - `SIMILAR TO` actually matches against regex
+
+
+### ORDER BY
+
+- ASC/DESC
+
 # Notes to Organize:
 
 - `varchar()` is used when a string limitation is set. `char()` is used when the strings are all the same length

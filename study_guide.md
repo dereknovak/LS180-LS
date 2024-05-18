@@ -25,7 +25,9 @@ https://launchschool.com/books/sql/read/preparations
 - DML: Data Manipulation Language: "Used to retrieve or modify data stored in a database. `SELECT` queries are part of DML."
 - DCL: Data Control Language: "Used to determine what various users are allowed to do when interacting with a database."
 
-### SELECT
+# Query Commands
+
+## SELECT
 
 - "This is a keyword that identifies the type of statement being issued."
 
@@ -35,11 +37,11 @@ https://launchschool.com/books/sql/read/preparations
 
 - "This is a wild card character that acts as an identifier for all of the columns in a given table."
 
-### FROM
+## FROM
 
 - "It is used as a clause within a `SELECT` statement to identify the table from which to retrieve the data.
 
-### WHERE
+## WHERE
 
 - Logical operators `OR` `AND` `NOT`
 
@@ -52,14 +54,47 @@ https://launchschool.com/books/sql/read/preparations
     - `SIMILAR TO` actually matches against regex
 
 
-### ORDER BY
+## ORDER BY
 
 - ASC/DESC
 
-### GROUP BY
+## GROUP BY
 
 - "excelent article" https://medium.com/@iandaustin/grokking-group-by-bd0bfd7082ea
 - Displays all results relevant to what is being grouped
+
+# Updating and Delete Data
+https://launchschool.com/books/sql/read/update_and_delete_data
+
+- Updates cannot be undone, so it's important to ensure you are updating/deleting the correct information.
+
+- It's good practice to use `SELECT` first to verify you are targetting the correct information.
+
+## UPDATE
+
+```sql
+UPDATE table_name
+SET column = 'value'
+WHERE condition;
+```
+
+- Can be used to 'delete' a single value within a row, as `DELETE` can only remove the entire row.
+    - This is achieved using `NULL`, and you can set the `column = NULL`, unlike the `WHERE` clause.
+
+## DELETE FROM
+
+```sql
+DELETE FROM table_name
+WHERE condition;
+```
+
+# Table Relationships
+https://launchschool.com/books/sql/read/table_relationships
+
+### Normalization:
+
+- "The reason for normalization is to reduce data redundancy and improve data integrity"
+- "The mechanism for carrying out normalization is arranging data in multiple tables and defining relationships between them"
 
 # Notes to Organize:
 

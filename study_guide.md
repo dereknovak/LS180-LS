@@ -29,6 +29,8 @@ https://launchschool.com/books/sql/read/preparations
 
 - "This is a keyword that identifies the type of statement being issued."
 
+- Functions (string, data/time, aggregate)
+
 ### *
 
 - "This is a wild card character that acts as an identifier for all of the columns in a given table."
@@ -53,6 +55,11 @@ https://launchschool.com/books/sql/read/preparations
 ### ORDER BY
 
 - ASC/DESC
+
+### GROUP BY
+
+- "excelent article" https://medium.com/@iandaustin/grokking-group-by-bd0bfd7082ea
+- Displays all results relevant to what is being grouped
 
 # Notes to Organize:
 

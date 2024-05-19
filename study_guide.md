@@ -1,3 +1,5 @@
+# LS180 'Database Foundations' Study Guide
+
 ## Relational Database
 https://launchschool.com/books/sql/read/introduction
 
@@ -63,6 +65,17 @@ https://launchschool.com/books/sql/read/preparations
 - "excelent article" https://medium.com/@iandaustin/grokking-group-by-bd0bfd7082ea
 - Displays all results relevant to what is being grouped
 
+# Insert Data into a Table
+
+## INSERT INTO
+
+```sql
+INSERT INTO table_name
+    (column_1, column_2 ...)
+  VALUES
+    ('value 1', 'value 2' ...);
+```
+
 # Updating and Delete Data
 https://launchschool.com/books/sql/read/update_and_delete_data
 
@@ -95,6 +108,150 @@ https://launchschool.com/books/sql/read/table_relationships
 
 - "The reason for normalization is to reduce data redundancy and improve data integrity"
 - "The mechanism for carrying out normalization is arranging data in multiple tables and defining relationships between them"
+
+### Entity Relationship Diagram (ERD)
+
+- "An ERD is a graphical representation of entities and their relationships to each other, and is a commonly used tool within database design."
+
+## Keys
+
+### Primary Keys
+
+- "A Primary Key is a unique identifier for a row of data."
+
+```sql
+ALTER TABLE table_name
+ADD PRIMARY KEY (column);
+```
+
+- It's good practice to use `id` as the Primary Key.
+
+### Foreign Keys
+
+- "A Foreign Key allows us to associate a row in one table to a row in another table."
+
+```sql
+FOREIGN KEY (fk_column_name)
+  REFERENCES target_table_name (pk_column_name)
+```
+
+- Used to create connections between 2 tables
+
+### Referential Integrity
+
+- "Referential integrity is the assurance that a column value within a record must reference an existing value; if it doesn't then an error is thrown."
+
+## Relationships
+
+### One-to-One
+
+- "A one-to-one relationship between two entities exists when a particular entity instance exists in one table, and it can have only one associated entity instance in another table."
+
+- A user can *only* have one address, and that address can belong to *only* one address.
+
+- `ON DELETE` will perform some kind of action when the row being referenced is deleted.
+    - `ON DELETE CASCADE` will also delete the specific row.
+
+### One-to-Many
+
+- "A one-to-many relationship exists between two entities if an entity instance in one of the tables can be associated with multiple records (entity instances) in the other table. The opposite relationship does not exist; that is, each entity instance in the second table can only be associated with one entity instance in the first table."
+
+- A review belongs to only one book, but a book can have many reviews.
+
+### Many-to-Many
+
+- "A many-to-many relationship exists between two entities if for one entity instance there may be multiple records in the other table, and vice versa."
+
+- A user can check out many books, and a book can be checked out by many users.
+
+# SQL Joins
+https://launchschool.com/books/sql/read/joins
+
+- "`JOIN`s are clauses in SQL statements that link two tables together, usually based on the keys that define the relationship between those two tables."
+
+## Syntax
+
+```sql
+SELECT table_nameN.column_name, ...
+    FROM table_name1
+    join_type JOIN table_name2
+        ON join_condition;
+```
+
+Necessary info:
+
+- The name of the table to join
+- The type of join to use
+- The name of the second table to join
+- The join condition
+
+## Types of Joins
+
+### INNER JOIN
+
+- "An INNER JOIN returns a result set that contains the common elements of the tables, i.e the intersection where they match on the joined condition."
+
+### LEFT JOIN (Outer)
+
+- "A LEFT JOIN or a LEFT OUTER JOIN takes all the rows from one table, defined as the LEFT table, and joins it with a second table."
+
+### RIGHT JOIN
+
+- "A RIGHT JOIN is similar to a LEFT JOIN except that the roles between the two tables are reversed, and all the rows on the second table are included along with any matching rows from the first table."
+
+### FULL JOIN
+
+- "A FULL JOIN or FULL OUTER JOIN is essentially a combination of LEFT JOIN and RIGHT JOIN. This type of join contains all of the rows from both of the tables."
+
+### CROSS JOIN
+
+- "A CROSS JOIN, also known as a Cartesian JOIN, returns all rows from one table crossed with every row from the second table."
+
+- This essentially displayed a *cross product* of a set. (PEMDAS)
+
+## Multiple Joins
+
+- Each JOIN creates a *transient table* that is a collection of all the tables columns. If there are multiple joins, a new transient table is created from the previous table
+
+```sql
+SELECT table1.column, table2.column, table3.column
+      FROM table1
+      INNER JOIN table2
+          ON table1.id = table2.t1_id   -- Transient Table is created (table1 + table2)
+      INNER JOIN table3
+          ON table3.id = table2.t2_id  -- Transient Table is created (Transient + table3)
+```
+
+## Aliasing
+
+- "Aliasing allows us to specify another name for a column or table and then use that name in later parts of a query to allow for more concise syntax."
+
+```sql
+SELECT u.full_name, b.title, c.checkout_date
+      FROM users AS u            -- users => u
+      INNER JOIN checkouts AS c  -- checkout => c
+          ON u.id = c.user_id
+      INNER JOIN books AS b      -- books => b
+          ON b.id = c.book_id;
+```
+
+- Can also be used to provided context about a query.
+
+```sql
+SELECT count(id) AS "Number of Books Checked Out"
+      FROM checkouts
+
+/*
+Number of Books Checked Out
+----------------------------
+                         4
+(1 row)
+*/
+```
+
+## Subqueries
+
+- "Imagine executing a SELECT query, and then using the results of that SELECT query as a condition in another SELECT query. This is called nesting, and the query that is nested is referred to as a subquery."
 
 # Notes to Organize:
 

@@ -15,19 +15,30 @@ https://launchschool.com/books/sql/read/introduction
 - MySQL
 
 ## SQL
+https://launchschool.com/lessons/a1779fd2/assignments/7673d9a9
 
 - "SQL, which stands for Structured Query Language, is the programming language used to communicate with a relational database."
-
 - "SQL is a **declarative** language; when you write a SQL statement you describe what needs to be done, but not exactly how to do it"
+- "SQL is a language used to manipulate the structure and values of datasets stored in a relational database."
+- "It is described as a **special purpose language** because it is typically used only for a very specific purpose: interacting with relational databases."
+
+
 
 ## SQL Sub-languages
 https://launchschool.com/books/sql/read/preparations
 
 - DDL: Data Definition Language: "Used to define the structure of a database and the tables and columns within it."
+    - `CREATE`, `DROP`, `ALTER`
 - DML: Data Manipulation Language: "Used to retrieve or modify data stored in a database. `SELECT` queries are part of DML."
+    - `SELECT`, `INSERT`, `UPDATE`, `DELETE`
 - DCL: Data Control Language: "Used to determine what various users are allowed to do when interacting with a database."
+    - `GRANT`, `REVOKE`
 
-# Query Commands
+# Statements
+
+- SQL is made up of **statements**, which is terminated by a semicolon.
+
+- "**Expressions** in SQL can make use of operators and functions."
 
 ## SELECT
 
@@ -256,5 +267,11 @@ Number of Books Checked Out
 # Notes to Organize:
 
 - `varchar()` is used when a string limitation is set. `char()` is used when the strings are all the same length
-
 - You can escape a `'` using a second `'`. `'O'Leary'` would become `'O''Leary'`.
+- `||` is used to concatenate strings
+- When dealing with `NULL`, always use `IS NULL` or `IS NOT NULL`
+
+
+```sql
+SELECT trunc((4 * pi() * power(26.3,2)))
+```

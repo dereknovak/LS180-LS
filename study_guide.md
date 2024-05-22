@@ -152,6 +152,31 @@ FOREIGN KEY (fk_column_name)
 
 - "Referential integrity is the assurance that a column value within a record must reference an existing value; if it doesn't then an error is thrown."
 
+### Natural Key
+https://launchschool.com/lessons/a1779fd2/assignments/00e428da
+
+- "A natural key is an existing value in a dataset that can be used to uniquely identify each row of data in that dataset."
+
+- The value, while 'unique', maybe change hands, such as a phone number or email address.
+
+### Surrogate Keys
+
+- "A surrogate key is a value that is created solely for the purpose of identifying a row of data in a database table."
+
+### Sequence
+
+- "A sequence is a special kind of relation that generates a series of numbers."
+
+```sql
+CREATE SEQUENCE name_seq
+
+-- PRIMARY KEY
+CREATE SEQUENCE example_id_seq
+CREATE TABLE example
+       id integer NOT NULL DEFAULT nextval('example_id_seq'),
+       name varchar(25)
+```
+
 ## Relationships
 
 ### One-to-One

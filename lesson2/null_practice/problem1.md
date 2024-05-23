@@ -1,1 +1,0 @@
-Using an operator on a `NULL` value results in another `NULL` value.

@@ -300,3 +300,9 @@ Number of Books Checked Out
 ```sql
 SELECT trunc((4 * pi() * power(26.3,2)))
 ```
+
+# Functions to Learn
+
+- string_agg()
+- avg
+- round

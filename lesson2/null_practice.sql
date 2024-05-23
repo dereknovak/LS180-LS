@@ -12,7 +12,7 @@ ALTER COLUMN department
 
 UPDATE employees
    SET department = 'unassigned'
-WHERE department IS NULL;
+ WHERE department IS NULL;
 
 ALTER TABLE employees
 ALTER COLUMN department

@@ -2,8 +2,11 @@
 
 ## Relational Database
 https://launchschool.com/books/sql/read/introduction
+https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
 
 - "A relational database is a database organized according to the relational model of data. In simple terms, the relational model defines a set of relations (which we can think of as analogous to tables) and describes the relationships, or connections, between them in order to determine how the data stored in them can interact."
+
+- "A **relation** is *usually* another way to say "table"."
 
 ## RDBMS
 
@@ -289,6 +292,32 @@ Number of Books Checked Out
 
 - "Imagine executing a SELECT query, and then using the results of that SELECT query as a condition in another SELECT query. This is called nesting, and the query that is nested is referred to as a subquery."
 
+# Levels of Schema (Abstraction)
+
+## Conceptual
+
+- Concerned mostly with bigger objects and higher level concepts
+- Cellphone
+    - Contact
+        - Multiple phone numbers?
+    - Phone calls
+
+- "High-level design focused on identifying entities and their relationships"
+- Entity-relationship model
+
+## Logical
+
+- Combination between the 2
+- SQL standards
+- Not as common to work with
+
+## Physical
+
+- Concerned mostly with database specific implementation of the conceptual model
+- Datatypes, rules on how things relate to each other
+
+- "Low-level database-specific design focused on implementation."
+
 # Notes to Organize:
 
 - `varchar()` is used when a string limitation is set. `char()` is used when the strings are all the same length
@@ -306,3 +335,54 @@ SELECT trunc((4 * pi() * power(26.3,2)))
 - string_agg()
 - avg
 - round
+
+
+
+# Study Guide
+
+STUDY GUIDE
+
+## **SQL**
+
+- Identify the different types of `JOIN`s and explain their differences.
+    
+- Name and define the three sublanguages of SQL and be able to classify different statements by sublanguage.
+
+    
+- Write SQL statements using INSERT, UPDATE, DELETE, CREATE/ALTER/DROP TABLE, ADD/ALTER/DROP COLUMN.
+            
+- Understand how to use GROUP BY, ORDER BY, WHERE, and HAVING.
+- Understand how to create and remove constraints, including `CHECK` constraints
+- Be familiar with using subqueries
+    
+    
+
+## **PostgreSQL**
+
+- Describe what a sequence is and what they are used for.
+    
+- Create an auto-incrementing column.
+- Define a default value for a column.
+    
+    
+- Be able to describe what primary, foreign, natural, and surrogate keys are.
+
+
+## **Database Diagrams**
+
+- Talk about the different levels of schema.
+- Define cardinality and modality.
+    
+- Be able to draw database diagrams using crow's foot notation.
+*/
+
+SPOT with Amy
+
+- Assessment straight forward
+
+https://www.codeproject.com/Articles/33052/Visual-Representation-of-SQL-Joins
+
+https://code.likeagirl.io/sqls-order-of-execution-f64d639ce4ec
+
+https://medium.com/@iandaustin/grokking-group-by-bd0bfd7082ea
+

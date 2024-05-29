@@ -141,12 +141,26 @@ ADD PRIMARY KEY (column);
 - It's good practice to use `id` as the Primary Key.
 
 ### Foreign Keys
+https://launchschool.com/lessons/5ae760fa/assignments/bb4f3ba2
 
 - "A Foreign Key allows us to associate a row in one table to a row in another table."
 
+- Add while creating table:
+
 ```sql
+CREATE TABLE table_name (
+  id serial PRIMARY KEY,
+  other_table_id int REFERENCES other_table (id)
+);
+```
+
+- Add after creating table:
+
+```sql
+ALTER TABLE table_name
+ADD CONSTRAINT table_column_id_fkey
 FOREIGN KEY (fk_column_name)
-  REFERENCES target_table_name (pk_column_name)
+REFERENCES target_table_name (pk_column_name);
 ```
 
 - Used to create connections between 2 tables
@@ -196,6 +210,12 @@ CREATE TABLE example
 - "A one-to-many relationship exists between two entities if an entity instance in one of the tables can be associated with multiple records (entity instances) in the other table. The opposite relationship does not exist; that is, each entity instance in the second table can only be associated with one entity instance in the first table."
 
 - A review belongs to only one book, but a book can have many reviews.
+
+- An **update anomoly** would occur if one piece of data, such as a customer's phone number, would need to be changed for *every* entry for that customer in a table.
+
+- An  **insertion anomoly** would occur if a piece of data, such as a customer's phone number, could not be added unless an order has been placed for them.
+
+- A **deletion anomoly** would occur if all pieces of data, such as a customer's phone number, is lost because orders from them were deleted.
 
 ### Many-to-Many
 
@@ -296,13 +316,14 @@ Number of Books Checked Out
 
 ## Conceptual
 
+- "High-level design focused on identifying entities and their relationships"
+
 - Concerned mostly with bigger objects and higher level concepts
 - Cellphone
     - Contact
         - Multiple phone numbers?
     - Phone calls
 
-- "High-level design focused on identifying entities and their relationships"
 - Entity-relationship model
 
 ## Logical
@@ -313,10 +334,42 @@ Number of Books Checked Out
 
 ## Physical
 
+- "Low-level database-specific design focused on implementation."
+
 - Concerned mostly with database specific implementation of the conceptual model
 - Datatypes, rules on how things relate to each other
 
-- "Low-level database-specific design focused on implementation."
+# Cardinality & Modality
+https://launchschool.com/lessons/5ae760fa/assignments/46053e3b
+
+### Cardinality
+
+- "The number of objects on each side of the relationship."
+
+- Uses *Crow's Foot* notation.
+
+### Modality
+
+- "If the relationship is required (1) or optional (0)."
+
+### one - optional
+
+--|-O-----
+
+### one - required
+
+--|-|-----
+
+### many - optional
+
+3---O-----
+
+### many - required
+
+3---|-----
+
+
+
 
 # Notes to Organize:
 

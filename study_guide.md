@@ -223,6 +223,8 @@ CREATE TABLE example
 
 - A user can check out many books, and a book can be checked out by many users.
 
+- Uses a *join table* to link the 2 tables together, typically consisting of both names delimited by an underscore.
+
 # SQL Joins
 https://launchschool.com/books/sql/read/joins
 
@@ -377,7 +379,12 @@ https://launchschool.com/lessons/5ae760fa/assignments/46053e3b
 - You can escape a `'` using a second `'`. `'O'Leary'` would become `'O''Leary'`.
 - `||` is used to concatenate strings
 - When dealing with `NULL`, always use `IS NULL` or `IS NOT NULL`
+- Type conversions can occur using `::`
 
+```sql
+SELECT 365::text
+-- '365'
+```
 
 ```sql
 SELECT trunc((4 * pi() * power(26.3,2)))

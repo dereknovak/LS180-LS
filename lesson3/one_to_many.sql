@@ -41,3 +41,9 @@ ERROR: duplicate key value violates unique constraint "unique_number"
 disambiguate `when` being used as a column name, a user can wrap the text in
 double-quotes, which tells the RDBM to treat it as such.
 */
+
+-- 7
+
+/*
+Contact -|-----O-< Calls
+*/

@@ -50,7 +50,7 @@ VALUES (4, 5),
 -- 4
 
 ALTER TABLE books_categories
-ADD UNIQUE (book_id, category_id);
+  ADD UNIQUE (book_id, category_id);
 
 -- 5
 

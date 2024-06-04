@@ -310,10 +310,6 @@ Number of Books Checked Out
 */
 ```
 
-## Subqueries
-
-- "Imagine executing a SELECT query, and then using the results of that SELECT query as a condition in another SELECT query. This is called nesting, and the query that is nested is referred to as a subquery."
-
 # Levels of Schema (Abstraction)
 
 ## Conceptual
@@ -370,8 +366,68 @@ https://launchschool.com/lessons/5ae760fa/assignments/46053e3b
 
 3---|-----
 
+# Indexes
+https://launchschool.com/lessons/e752508c/assignments/17c58bc3
 
+- "In the context of a database, an index is a mechanism that SQL engines use to speed up queries."
 
+```sql
+CREATE INDEX index_name
+    ON table_name (field_name, [...]);
+```
+
+# Subqueries
+https://launchschool.com/books/sql/read/joins#subqueries
+https://launchschool.com/lessons/e752508c/assignments/2009d549
+
+- "Imagine executing a SELECT query, and then using the results of that SELECT query as a condition in another SELECT query. This is called nesting, and the query that is nested is referred to as a subquery."
+
+- `IN`, `NOT IN`, `ANY`, `SOME`, `ALL`
+
+```sql
+SELECT name FROM customers
+ WHERE customers.id IN (
+       SELECT customer_id
+         FROM purchases
+ );
+```
+## Subquery Expressions
+
+### EXISTS
+
+- "`EXISTS` effectively checks whether any rows at all are returned by the nested query. If at least one row is returned then the result of EXISTS is 'true', otherwise it is 'false'."
+
+```sql
+SELECT name FROM bidders
+WHERE EXISTS (
+      SELECT 1 FROM bids
+      WHERE bidder_id = bidders.id
+);
+```
+
+### IN/NOT IN
+
+```sql
+SELECT name FROM authors
+ WHERE id NOT IN (
+       SELECT author_id FROM books
+        WHERE title LIKE 'The%'
+ );
+```
+
+### ANY/SOME & ALL
+
+```sql
+SELECT name FROM authors
+ WHERE length(name) > ANY (
+       SELECT length(title) FROM books
+        WHERE title LIKE 'The%'
+ );
+```
+### EXPLAIN/ANALYZE
+
+- Good hands-on description:
+    - https://launchschool.com/exercises/27dac993
 
 # Notes to Organize:
 

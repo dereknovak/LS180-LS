@@ -108,7 +108,7 @@ WHERE condition;
 - Can be used to 'delete' a single value within a row, as `DELETE` can only remove the entire row.
     - This is achieved using `NULL`, and you can set the `column = NULL`, unlike the `WHERE` clause.
 
-## DELETE FROM
+## DELETE FROM 
 
 ```sql
 DELETE FROM table_name

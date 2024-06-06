@@ -19,10 +19,22 @@
     - [INSERT](#insert)
     - [UPDATE](#update)
     - [DELETE](#delete)
+- [Additional Statements](#additional-statements)
+    - [GROUP BY](#group-by)
+    - [ORDER BY](#order-by)
+    - [WHERE](#where)
+    - [HAVING](#having)
 - [Columns](#columns)
 - [Constraints](#constraints)
     - [Adding](#adding-constraints)
     - [Removing](#removing-constraints)
+- [JOIN Statements](#join-statements)
+    - [INNER JOIN](#inner-join)
+    - [LEFT JOIN](#left-outer-join)
+    - [RIGHT JOIN](#right-outer-join)
+    - [FULL JOIN](#full-outer-join)
+    - [CROSS JOIN](#cross-join)
+- [Subqueries]
 
 
 # General Terminology
@@ -174,6 +186,50 @@ DELETE FROM table_name
  WHERE condition;
 ```
 
+# Additional Statements
+
+## GROUP BY
+https://launchschool.com/books/sql/read/more_on_select#groupby
+https://medium.com/@iandaustin/grokking-group-by-bd0bfd7082ea
+
+- The `GROUP BY` statement is used to group data in conjuction with an aggregate function.
+
+```sql
+SELECT column_name, function(column2_name)
+  FROM table_name
+ GROUP BY column_name;
+```
+
+## ORDER BY
+
+- The `ORDER BY` statement provides instructions on how data within the returned table should be ordered. The statement defaults to an ascending order, but can be modified by including `DESC`.
+- If multiple rows share the same value, a second column name can be included to further organize the returned table, initially organizing by the first column, then by the second.
+
+```sql
+SELECT column_name FROM table_name
+ORDER BY id DESC;
+
+SELECT column_name FROM table_name
+ORDER BY id DESC, column_name;
+```
+
+## WHERE
+
+- The `WHERE` statement uses a conditional statement to identify which data of a relation should be modified.
+
+```sql
+SELECT column_name FROM table_name
+ WHERE column_name = 'value';
+
+UPDATE table_name
+   SET column_name = 'value1'
+ WHERE id = 1;
+```
+
+## HAVING
+
+- **********************
+
 # Columns
 
 ## New Column
@@ -195,12 +251,12 @@ ALTER COLUMN column_name
 
 ## Adding Constraints
 
-### `UNIQUE` or `NOT NULL`
+### `UNIQUE` / `NOT NULL` / `DEFAULT`
 
 ```sql
 ALTER TABLE table_name
 ALTER COLUMN column_name
-SET NOT NULL;
+  SET NOT NULL;
 ```
 
 ### Others
@@ -217,8 +273,138 @@ CHECK (condition);
 
 ```sql
 ALTER TABLE table_name
+ALTER COLUMN column_name
+ DROP DEFAULT;
+
+ALTER TABLE table_name
  DROP CONSTRAINT constraint_name;
 ```
+
+# JOIN Statements
+https://launchschool.com/books/sql/read/joins
+
+- A `JOIN` statement creates a *transient table* by combining two separate relations connected through a foreign key.
+
+## INNER JOIN
+
+- An `INNER JOIN` statement creates a transient table between two relations that includes only the rows where a definite match is made between the two columns used in the `ON` conditional statement.
+
+- Because the `INNER JOIN` is the most common method of joining relations, it can be aliased by simply using `JOIN`.
+
+```sql
+SELECT books.title, authors.name
+  FROM books
+ INNER JOIN authors
+         ON books.author_id = authors.id;
+
+/*
+       title        |     name      
+--------------------+---------------
+ Harry Potter       | J.K. Rowling
+ Project: Hail Mary | Andy Weir
+ The Martian        | Andy Weir
+ Dune               | Frank Herbert
+(4 rows)
+*/
+```
+
+## LEFT OUTER JOIN
+
+- A `LEFT OUTER JOIN`, or `LEFT JOIN`, statement creates a transient table between two relations that includes *all* rows from the left -- first included -- relation, and all matching data from the right -- second included -- relation. If no relationship has been established to the right relation, `NULL` will be used to represent the missing value.
+
+```sql
+SELECT books.title, authors.name
+  FROM books
+  LEFT OUTER JOIN authors
+          ON books.author_id = authors.id;
+
+/*
+       title        |     name      
+--------------------+---------------
+ Harry Potter       | J.K. Rowling
+ Project: Hail Mary | Andy Weir
+ The Martian        | Andy Weir
+ Dune               | Frank Herbert
+ Bible              | 
+(5 rows)
+*/
+```
+
+## RIGHT OUTER JOIN
+
+- A `RIGHT OUTER JOIN`, or `RIGHT JOIN`, statement creates a transient table between two relations that includes *all* rows from the right -- second included -- relation, and all matching data from the left -- first included -- relation. If no relationship has been established to the left relation, `NULL` will be used to represent the missing value.
+
+```sql
+SELECT books.title, authors.name
+  FROM books
+ RIGHT OUTER JOIN authors
+          ON books.author_id = authors.id;
+
+/*
+       title        |     name      
+--------------------+---------------
+ Harry Potter       | J.K. Rowling
+ Project: Hail Mary | Andy Weir
+ The Martian        | Andy Weir
+ Dune               | Frank Herbert
+                    | Stephen King
+(5 rows)
+*/
+```
+
+## FULL OUTER JOIN
+
+- A `FULL OUTER JOIN`, or `FULL JOIN`, statement creates a transient table between two relations that includes *all* rows from *both* relations, matching data based upon the columns used in the `ON` conditional statement. If no relationship has been established to either relation, `NULL` will be used to represent the missing value.
+
+```sql
+SELECT books.title, authors.name
+  FROM books
+  FULL OUTER JOIN authors
+          ON books.author_id = authors.id;
+
+/*
+       title        |     name      
+--------------------+---------------
+ Harry Potter       | J.K. Rowling
+ Project: Hail Mary | Andy Weir
+ The Martian        | Andy Weir
+ Dune               | Frank Herbert
+ Bible              | 
+                    | Stephen King
+(6 rows)
+*/
+```
+
+## CROSS JOIN
+
+- A `CROSS JOIN` statement creates a transient table between two relations that includes *all possible relationships* between them. While uncommon, `CROSS JOIN`s are most useful when trying to discover every possible combinationof data, so anything that requires any kind of mixing will be relevant. This can include ingredients for a recipe or clothes for an outfit.
+
+```sql
+SELECT books.title, authors.name
+  FROM books
+ CROSS JOIN authors;
+
+/*
+       title        |     name      
+--------------------+---------------
+ Harry Potter       | J.K. Rowling
+ Project: Hail Mary | J.K. Rowling
+ The Martian        | J.K. Rowling
+ Dune               | J.K. Rowling
+ Bible              | J.K. Rowling
+ Harry Potter       | Andy Weir
+ Project: Hail Mary | Andy Weir
+ ...
+(20 rows)
+*/
+```
+
+# Subqueries
+
+
+
+
+
 
 
 

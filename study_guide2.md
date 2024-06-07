@@ -5,7 +5,7 @@
 - [General Terminology](#general-terminology)
     - [SQL](#sql-structured-query-language)
     - [Relational Database](#relational-database)
-    - [RDBMS](#rdbms)
+    - [RDBMS](#rdbms) *******
 - [SQL Sub-Languages](#sql-sublanguages)
     - [DDL](#ddl-data-definition-language)
     - [DML](#dml-data-management-language)
@@ -23,14 +23,22 @@
     - [GROUP BY](#group-by)
     - [ORDER BY](#order-by)
     - [WHERE](#where)
-    - [HAVING](#having)
+    - [HAVING](#having) *******
+    - [LIMIT] *****
+    - [OFFSET] *****
 - [Columns](#columns)
+    - [Data Types](#data-types)
+    - [NULL](#null)
+    - [New Column](#new-column)
+    - [Change Data Type](#change-data-type)
 - [Constraints](#constraints)
+    - [Check Constraints](#check-constraints) *********
     - [Adding](#adding-constraints)
     - [Removing](#removing-constraints)
 - [Relational Data](#relational-data)
     - [Relationships](#relationships)
     - [Normalization](#normalization)
+    - [ERD](#erd-entity-relationship-diagram)
     - [Levels of Schema](#levels-of-schema)
     - [Cardinality](#cardinality)
     - [Modality](#modality)
@@ -43,7 +51,12 @@
 - [Subqueries](#subqueries)
     - [Subquery Expressions](#subquery-expressions)
     - [Scalar Subqueries](#scalar-subqueries)
-- [Keys]
+- [Keys](#keys)
+    - [Natural Key](#natural-key)
+    - [Surrogate Key](#surrogate-key)
+    - [Primary Key](#primary-key)
+    - [Foreign Key](#foreign-key)
+- [Sequences]
 
 
 # General Terminology
@@ -59,7 +72,7 @@ https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
 
 - A **relational database** is one that defines a series of relations (generally tables) and outlines the relationships between, allow the relations to interact.
 
-## RDBMS ******
+## RDBMS
 
 - An **RDBMS** (Relational Database Management System) is an application used for managing relational databases by using SQL statements and queries to access or change information and schema within a database. Examples of RDBMSs include MySQL, PostgreSQL, MS SQL, and SQLite.
 
@@ -69,8 +82,6 @@ https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
 
 - The **DDL** (Data Defintion Language) is a SQL sublanguage used to define the *structure* of a database, including its tables, columns, and the database itself.
 
-### Examples
-
 - `CREATE`
 - `ALTER`
 - `DROP`
@@ -78,8 +89,6 @@ https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
 ## DML (Data Management Language)
 
 - The **DML** (Data Management Language) is a SQL sublanguage used to retrieve or modify the *data* that is stored within a database.
-
-### Examples
 
 - `SELECT`
 - `INSERT`
@@ -89,8 +98,6 @@ https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
 ## DCL (Data Control Language)
 
 - The **DCL** (Data Control Language) is a SQL sublanguage used to manage the *permissions* of a database, allowing or restricting functionality to users.
-
-### Examples
 
 - `GRANT`
 - `REVOKE`
@@ -140,7 +147,6 @@ DROP TABLE table_name;
 ALTER TABLE table_name
  DROP COLUMN column_name;
 ```
-
 
 # DML Statements
 
@@ -237,9 +243,52 @@ UPDATE table_name
 
 ## HAVING
 
-- **********************
-
 # Columns
+
+## Data Types
+
+### Character
+
+- `text`
+    - Unlimitted length of text
+- `varchar(length)`
+    - Varying Character
+    - Up to a `length` of characters, varying
+- `char(length)`
+    - All characters have `length` size
+
+### Numeric
+
+- `int` / `integer`
+    - Whole numbers
+- `numeric(digits, precision)` / `decimal`
+    - A decimal number with X number of `digits` and `precision` after decimal
+- `real`
+    - Floating point number, any amount of digits
+
+### Date / Time
+
+- `timestamp`
+    - Date and Time (`'1999-01-08 04:05:06'`)
+    - Inserted as a string
+- `date`
+    - Only the date (`'1999-01-08'`)
+    - Inserted as a string
+
+### Boolean
+
+- `boolean`
+    - `true` or `false`
+    - Displays abbreviated, but cannot insert as such
+
+## NULL
+
+- In SQL, `NULL` does not represent a value, but rather the absense of a value. Because of this, the expression `column_name = NULL` is syntactically incorrect; instead, the column `IS NULL` or `IS NOT NULL`.
+
+```sql
+SELECT column_name FROM table_name
+ WHERE column_name IS NULL;
+```
 
 ## New Column
 
@@ -257,6 +306,8 @@ ALTER COLUMN column_name
 ```
 
 # Constraints
+
+## Check Constraints
 
 ## Adding Constraints
 
@@ -321,6 +372,10 @@ https://launchschool.com/lessons/5ae760fa/assignments/e94816bd
 - An  **insertion anomaly** would occur if a piece of data, such as a customer's phone number, could not be added unless an order has been placed for them.
 
 - A **deletion anomaly** would occur if all pieces of data, such as a customer's phone number, is lost because orders from them were deleted.
+
+## ERD (Entity Relationship Diagram)
+
+- An **ERD** (Entity Relationship Diagram) is a visual respresentation of the entities within a database and their relationship with one another.
 
 ## Levels of Schema
 https://launchschool.com/lessons/5ae760fa/assignments/2f3bc8f7
@@ -527,21 +582,40 @@ SELECT name, (
 
 - A **natural key** is a value within a set of data that can be used to identify every row within the relation. These values, while unique, may not always remain linked to a specific set of data, such as a phone number or email address.
 
-## Surragate Key
+## Surrogate Key
 
 - A **surragate key** is a value *specifically created* to identify a set of data within a relation. This value never changes and will always be tied to its respective data.
 
 ## Primary Key
 
+- A **primary key** is a unique value used to indentify a row of data, generally created alongside the `id` column of a relation. These keys are used in conjunction with *foreign keys* to establish a relationship between two relations.
+- Designating a primary key to a column is effectly the same as setting the `NOT NULL` and `UNIQUE` constraints.
+
+```sql
+CREATE TABLE table_name (
+  id serial PRIMARY KEY,
+  column_name type
+);
+
+ALTER TABLE table_name
+  ADD PRIMARY KEY (id);
+```
+
 ## Foreign Key
 
+- A **foreign key** provides the ability to link one relation to another, using the respective column to reference the *primary key* column of another.
+- Unlike primary keys, designating a foreign key to a column does *not* automatically set the `NOT NULL` and `UNIQUE` constraints.
 
+```sql
+CREATE TABLE table_name (
+  id serial PRIMARY KEY,
+  column_name type,
+  other_id int REFERENCES others (id)
+);
 
+ALTER TABLE table_name
+ADD FOREIGN KEY (other_id) REFERENCES others (id);
+```
 
-
-
-
-
-
-
+# Sequences
 

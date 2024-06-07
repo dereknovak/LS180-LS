@@ -28,13 +28,22 @@
 - [Constraints](#constraints)
     - [Adding](#adding-constraints)
     - [Removing](#removing-constraints)
+- [Relational Data](#relational-data)
+    - [Relationships](#relationships)
+    - [Normalization](#normalization)
+    - [Levels of Schema](#levels-of-schema)
+    - [Cardinality](#cardinality)
+    - [Modality](#modality)
 - [JOIN Statements](#join-statements)
     - [INNER JOIN](#inner-join)
     - [LEFT JOIN](#left-outer-join)
     - [RIGHT JOIN](#right-outer-join)
     - [FULL JOIN](#full-outer-join)
     - [CROSS JOIN](#cross-join)
-- [Subqueries]
+- [Subqueries](#subqueries)
+    - [Subquery Expressions](#subquery-expressions)
+    - [Scalar Subqueries](#scalar-subqueries)
+- [Keys]
 
 
 # General Terminology
@@ -280,6 +289,62 @@ ALTER TABLE table_name
  DROP CONSTRAINT constraint_name;
 ```
 
+# Relational Data
+https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
+
+## Relationships
+
+### One-to-One
+
+- A **One-to-One Relationship** between two entities is exhibited when both extities can only have a single match from the other. These are the least common forms of relationships, as most relationships have many matches in at least one direction.
+- A user can only have one address, and that address can only belong to one user.
+
+### One-to-Many
+
+- A **One-to-Many Relationship** between two entities is exhibited when one entity can have a single match from the other, while the other can have many matches.
+- A book can only have one author, but the author can have many books.
+
+### Many-to-Many
+
+- A **Many-to-Many Relationship** between two entities is exhibited when both entities can have many matches with the other. In order to display this relationship, an additional *join table* can be used to link the two relations together, with its name typically consiting of both names delimited by an underscore.
+- A student can check out many books, and a book can be checked out by many students.
+
+## Normalization
+https://launchschool.com/lessons/5ae760fa/assignments/e94816bd
+
+- **Normalization** is the process of abstracting schema to prevent repetitive data entries, improve data integrity, and minimize data management anomalies. This mechanism is achieved by separating data into multiple relations and establishing links between them.
+
+### Anomalies
+
+- An **update anomaly** would occur if one piece of data, such as a customer's phone number, would need to be changed for *every* entry for that customer in a table.
+
+- An  **insertion anomaly** would occur if a piece of data, such as a customer's phone number, could not be added unless an order has been placed for them.
+
+- A **deletion anomaly** would occur if all pieces of data, such as a customer's phone number, is lost because orders from them were deleted.
+
+## Levels of Schema
+https://launchschool.com/lessons/5ae760fa/assignments/2f3bc8f7
+
+### Conceptual
+
+- The *conceptual* level of schema is a high-level design that is solely focused on identifying the relationships between entities, not getting too deep into the details of the relationship. This establishes an **entity-relationship model** of the schema.
+
+### Logical
+
+- The *logical* level of schema is a mixture of its two adjacent models, including precision in aspects of the model while high-level in others.
+
+### Physical
+
+- The *physical* level of schema is a low-level design that is focused on the specific implementation of the conceptual model, including the data types and rules regarding how the relations are related.
+
+## Cardinality
+
+- **Cardinality** refers to the number of objects on each side of a relationship, typically using a straight line to indicate one and *Crow's Foot Notation* for many.
+
+## Modality
+
+- **Modality** indicates the requirement of each side of a relationship, with a single line (or 1) designating required and a circle (or 0) for optional.
+
 # JOIN Statements
 https://launchschool.com/books/sql/read/joins
 
@@ -400,6 +465,76 @@ SELECT books.title, authors.name
 ```
 
 # Subqueries
+https://launchschool.com/books/sql/read/joins#subqueries
+https://launchschool.com/lessons/e752508c/assignments/2009d549
+
+- A *subquery* uses the results of a nested `SELECT` query to access data from a separate relation, typically used within a condition.
+
+## Subquery Expressions
+
+### EXISTS
+
+- The `EXIST` subquery expression checks whether any rows are returned by the subquery, returning 'true' or 'false', respectively.
+
+```sql
+SELECT customers.name FROM customers
+ WHERE EXISTS (
+       SELECT 1 FROM purchases
+        WHERE customer_id = customers.id
+);
+```
+
+### IN / NOT IN
+
+- The `IN` and `NOT IN` subquery expressions check whether or not an evaluated expression is found within the subquery, returning 'true' or 'false' depending on which is utilized.
+
+```sql
+SELECT customers.name FROM customers
+ WHERE customers.id NOT IN (
+       SELECT customer_id FROM purchases
+        WHERE purchases.cost > 10.00
+);
+```
+
+### ANY / SOME
+
+- The `ANY` subquery expression checks whether any of the returned rows from the subquery match a condition, returning 'true' or 'false' depending on the result.
+
+```sql
+SELECT customers.name FROM customers
+ WHERE length(customers.name) > ANY (
+       SELECT purchases.cost FROM purchases
+);
+```
+
+## Scalar Subqueries
+
+- A **scalar subquery** utilizes a subquery within the `SELECT` portion of the
+query. This allows parts of the outer query to be used within the inner
+subquery. It's important that this query only returns a single row/column.
+
+```sql
+SELECT name, (
+       SELECT COUNT(item_id) FROM bids
+        WHERE items.id = item_id
+       )
+  FROM items;
+```
+
+# Keys
+
+## Natural Key
+
+- A **natural key** is a value within a set of data that can be used to identify every row within the relation. These values, while unique, may not always remain linked to a specific set of data, such as a phone number or email address.
+
+## Surragate Key
+
+- A **surragate key** is a value *specifically created* to identify a set of data within a relation. This value never changes and will always be tied to its respective data.
+
+## Primary Key
+
+## Foreign Key
+
 
 
 

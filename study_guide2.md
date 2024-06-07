@@ -265,6 +265,8 @@ UPDATE table_name
     - A decimal number with X number of `digits` and `precision` after decimal
 - `real`
     - Floating point number, any amount of digits
+- `serial`
+    - Used to create integer identifiers that are auto-incrementing and cannot contain a null value.
 
 ### Date / Time
 
@@ -529,7 +531,7 @@ https://launchschool.com/lessons/e752508c/assignments/2009d549
 
 ### EXISTS
 
-- The `EXIST` subquery expression checks whether any rows are returned by the subquery, returning 'true' or 'false', respectively.
+- The `EXISTS` subquery expression checks whether any rows are returned by the subquery, returning 'true' or 'false', respectively.
 
 ```sql
 SELECT customers.name FROM customers
@@ -615,6 +617,17 @@ CREATE TABLE table_name (
 
 ALTER TABLE table_name
 ADD FOREIGN KEY (other_id) REFERENCES others (id);
+```
+
+### ON DELETE CASCADE
+
+- In a relationship built using a foreign key that includes `ON DELETE CASCADE`, if a row from the parent table is deleted, all related rows in the child table containing the foreign key will also be deleted.
+
+```sql
+CREATE TABLE table_name (
+  id serial PRIMARY KEY,
+  other_id int REFERENCES others (id) ON DELETE CASCADE
+);
 ```
 
 # Sequences

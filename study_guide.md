@@ -502,3 +502,4 @@ https://code.likeagirl.io/sqls-order-of-execution-f64d639ce4ec
 
 https://medium.com/@iandaustin/grokking-group-by-bd0bfd7082ea
 
+

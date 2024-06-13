@@ -368,3 +368,323 @@ An important thing to note here is that `IS NULL` has to be specified, as any nu
 
 # 22
 
+Consider the error message below: What does this error message tell us? Write a statement that could cause an error like that and describe ways to resolve this error.
+
+```
+ERROR:  column "users.full_name" must appear in the GROUP BY clause or be used in an aggregate function
+```
+
+The above error is thrown when attempting to create a new table with multiple for a  column existing within a single row, without any instructions on how to display them.
+
+To demonstrate, imagine there is a table `artists` with columns `name` and `favorite_color`. Say we wanted to display a new table with all potential colors and the amount of artists who chose them. You might start with this query:
+
+```sql
+SELECT favorite_color, name
+  FROM artists
+ GROUP BY favorite_color;
+```
+
+This will, however, throw the above error. Although we are grouping the data by `favorite_color`, this will retrieve multiple results for `name`, and the database won't know what to do with such data. This is where an aggregate function comes in handy, as it performs an action on the data from this column. To see how many artists chose that color, we could `COUNT` the number of names that appear.
+
+```sql
+SELECT favorite_color, COUNT(name)
+  FROM artists
+ GROUP BY favorite_color;
+```
+
+Now, there is but one piece of data per group, so the database has no issues displaying it.
+
+# 23
+
+Consider a `students` table below:
+
+```
+id |    name    |    year_of_birth    |    grade
+-------------------------------------------------
+1  |  'Eddie'   |   1986-01-01        |   A
+2  |  'Maggie'  |   1975-04-11        |   B+
+3  |  'Elenore' |   1995-03-13        |   A-
+```
+
+1. Write a query that returns names of students who were born in April
+2. Write a query that returns names of students who were born on 11th of April
+3. Write a query that returns  all students who were born in 1986
+4. Write a query that returns the oldest person
+
+## 1
+
+```sql
+SELECT name FROM students
+ WHERE date_part('month', year_of_birth) = 4;
+```
+
+## 2
+
+```sql
+SELECT name FROM students
+ WHERE date_part('month', year_of_birth) = 4
+   AND date_part('day', year_of_birth) = 11;
+```
+
+## 3
+
+```sql
+SELECT * FROM students
+ WHERE date_part('year', year_of_birth) = 1986;
+```
+
+## 4
+
+```sql
+SELECT name AS oldest_person
+  FROM students
+ ORDER BY year_of_birth 
+ LIMIT 1;
+```
+
+# 24
+
+What syntax would you use to remove all rows from an imaginative `students` table? Present a code that illustrates that.
+
+```sql
+DELETE FROM students;
+```
+
+# 25
+
+Why do we need to create multiple tables instead of just keeping all the data in one table?
+
+Separating data into multiple tables helps to *normalize* the data, which is the process of abstracting schema to prevent repetitive data entries, improve data integrity, and minimize data management anomalies. As an example, say we want to change a customer's email address in a single table that houses all customer purchases at a store. Because only one table is utilized, an **update anomaly** occurs, meaning that the email has to be updated for *every entry* of the customer. This would be a simpler a process if the customer's information existed in its own, separate table, that way the email can be updated and any relation that is linked to this `customers` table will see the update.
+
+# 26
+
+Consider the following `students` table: 
+
+```
+id |    name    |    year_of_birth    |    grade |  class
+-----------------------------------------------------------
+1  |  'Eddie'   |   1986-01-01        |   A      |  Math
+2  |  'Maggie'  |   1975-04-11        |   B+     |  History
+3  |  'Elenore' |   1995-03-13        |   A-     |  French
+```
+
+1. We no longer want to have classes at the same table as students. What are the steps you would take to create another table `classes` and create a relationship between `students` and `classes`.
+2. Create `classes` table and the relationship between `classes` and `students`.
+
+## 1 & 2
+
+The first step would be to create a new `classes` table that contains each of the academic classes used within the `students` table.
+
+```sql
+CREATE TABLE classes (
+  id serial PRIMARY KEY,
+  subject varchar UNIQUE NOT NULL
+);
+
+INSERT INTO classes (subject)
+VALUES ('Math'),
+       ('History'),
+       ('French');
+```
+
+Then, `students.class` should be dropped and replaced with `students.class_id`, referencing the `id` of the respective subject using a *foreign key*.
+
+```sql
+ALTER TABLE students
+ DROP COLUMN class;
+
+ALTER TABLE students
+ ADD COLUMN class_id int REFERENCES classes (id);
+```
+
+Lastly, the `id` of the corresponding should be added to the new column for each entry.
+
+```sql
+UPDATE students SET class_id = 1 WHERE id = 1;
+UPDATE students SET class_id = 2 WHERE id = 2;
+UPDATE students SET class_id = 3 WHERE id = 3;
+```
+
+# 27
+
+What benefits does presenting cardinality give us? How may the information that representing cardinality in our diagrams be useful for the database design?
+
+Cardinality displays the number of objects on each side of a relationship, which can aid in understanding how the relations are linked together. For example, if we were running a bookstore, 2 tables might exist: `books` and `authors`. A book may have one single author, while that author may have written many books, creating a *one-to-many* relationship. Thus, `books` would have `1` cardinality while `authors` would have `many`, denoted by a single line and crow's foot notation, respectively. Seeing this cardinality makes it easier to understand how these relations are linked from a quick viewing.
+
+# 28
+
+Consider the ERD below. Describe the relationships between those entities:
+
+The first example demonstrates a **one-to-many** relationship, as a Director can have many films, but a Film can only have one director.
+
+The second example demonstrates a few relationships:
+
+- A **one-to-many** relationship between a Student and a University.
+- A **one-to-many** relationship between a University and a Scholarship.
+- A **many-to-many** relationship between a Student and a Scholarship.
+
+# 29
+
+Consider the following diagram. Describe what is the cardinality between entities?
+
+Same answer as 29, with one-to-many being represented by 1:M and many-to-many represented by M:M.
+
+# 30
+
+Consider the two tables below:
+
+```
+SELECT * FROM customers;
+customer_id | name  
+-------------+-------
+           1 | Johny
+           2 | Ben
+           3 | Gary
+
+SELECT * FROM orders;
+order_id | customer_id | orders 
+----------+-------------+--------
+        1 |           1 | book
+        2 |           2 | mug
+        3 |           3 | chair
+
+\d orders 
+
+Column    |  Type   | Collation | Nullable |                 Default                  
+-------------+---------+-----------+----------+------------------------------------------
+ order_id    | integer |           | not null | nextval('orders_order_id_seq'::regclass)
+ customer_id | integer |           |          | 
+ orders      | text    |           |          | 
+Indexes:
+    "orders_pkey" PRIMARY KEY, btree (order_id)
+Foreign-key constraints:
+    "orders_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+```
+
+What will happen if we run the following statement? Why? 
+
+```sql
+DELETE FROM customers WHERE customer_id = 3;
+```
+
+When attempting to delete this row, an error will be thrown, stating that `customer_id` cannot be referenced using the foreign key as it does not exist. Put simply, because the row containing the unique value of `3` for `customers.customer_id` is getting deleted, the row from `orders` that references it (third row) will no longer have a valid row that it is referencing, so the error is thrown.
+
+# 31
+
+Consider the error below: Why is this error raised? What can be done to eliminate this error?
+
+```
+ERROR:  update or delete on table "customers" violates foreign key constraint "orders_customer_id_fkey" on table "orders"
+DETAIL:  Key (customer_id)=(3) is still referenced from table "orders".
+```
+
+This is the error thrown from the previous example. In order to prevent this in the future, when creating the `orders.customer_id` foreign key row, `ON DELETE CASCADE` should be included. This will automatically delete any rows that have a link to the deleted row.
+
+# 32
+
+Consider the code below. What type of cardinality does this example present? Explain how did you deduce that.
+
+```sql
+CREATE TABLE students (
+	id serial PRIMARY KEY,
+	name varchar(100) 
+);   
+
+CREATE TABLE addresses (
+	student_id int, 
+	address text,
+	city text,
+	PRIMARY KEY (student_id),
+	FOREIGN KEY (student_id) REFERENCES students (id)
+		ON DELETE CASCADE
+);
+```
+
+These sql queries suggest the creation of a one-to-one relationship, or a 1:1 cardinality. This is because a primary key is, by default, a unique value; therefore, when used to reference a specific student from the `students` table using the foreign key, only one relationship is able to be linked, creating a one-to-one relationship.
+
+# 33
+
+Consider two tables below: Why we can add a student without an address but can't add an address without a student?
+
+```sql
+CREATE TABLE students (
+	id serial PRIMARY KEY,
+	name varchar(100) 
+);   
+
+CREATE TABLE addresses (
+	student_id int, 
+	address text,
+	city text,
+	PRIMARY KEY (student_id),
+	FOREIGN KEY (student_id) REFERENCES students (id)
+		ON DELETE CASCADE
+);
+```
+
+Adding an address without a student breaks the primary key constraint which requires a `student_id` to be present when adding data to the relation. Anything added to the `students` relation only requires a general `id`; however, the `student_id` column (which serves as the surrogate key) must exist and references a student in the `students` relation. Therefore, if the student does not already exist, the address cannot be added.
+
+# 34
+
+Consider two tables below: What will happen if we delete a row in a students table, that is referenced by a record in  addresses table? 
+
+```sql
+CREATE TABLE students (
+	id serial PRIMARY KEY,
+	name varchar(100) 
+);   
+
+CREATE TABLE addresses (
+	student_id int, 
+	address text,
+	city text,
+	PRIMARY KEY (student_id),
+	FOREIGN KEY (student_id) REFERENCES students (id)
+);
+```
+
+This action would throw an error, as the foreign key constraint created from `addresses.student_id` requires that a valid reference exists. If the referenced row is deleted, it will no longer exist and therefore no longer be valid, breaching the constraint rules and throwing an error.
+
+# 35
+
+Consider two tables below: 
+
+```
+table 'classes'
+id |  name   
+----+---------
+  1 | math
+  2 | german
+  3 | physics
+
+table 'students'
+
+id | name  | class_id 
+----+-------+----------
+  1 | Harry |        1
+  2 | Ben   |        2
+  3 | Marry |        3
+  4 | Marry |        2
+```
+
+Describe what the following statement will do and what will be the result of the query:
+
+```sql
+SELECT students.name as "Student Name", classes.name as "Class name"
+	FROM students 
+	INNER JOIN classes 
+	ON students.class_id = classes.id;
+```
+
+The above `SELECT` query will return a transient table that contains the `name` of both the student and their respective class, aliased by the names `Student Name` and `Class name`. Because some students have multiple classes, such as `'Marry'`, they will appear twice on within the table, as no `GROUP BY` statement is used.
+
+The transient table should look something like this:
+
+```
+Student Name |  Class Name 
+-------------+------------
+       Harry | math
+         Ben | german
+       Marry | physics
+       Marry | german
+```

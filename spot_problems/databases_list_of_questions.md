@@ -688,3 +688,231 @@ Student Name |  Class Name
        Marry | physics
        Marry | german
 ```
+
+# 36 & 37
+
+Same as 35
+
+# 38
+
+Consider the following tables:
+
+```
+table 'classes'
+id |  name   
+----+---------
+  1 | math
+  2 | german
+  3 | physics
+
+table 'students'
+
+ id | name  | year_of_birth | class_id 
+----+-------+---------------+---------
+  1 | Harry |  1987-02-04   |      1
+  2 | Ben   |  1976-11-13   |      2
+  3 | Marry |  1995-03-21   |      3
+  4 | Marry |  1995-03-21   |      2
+```
+
+Write a query:
+
+1. Return a list of students names who are born in 90' and attend German classes
+2. Return a list of students born in February along with a class they attend.
+
+## 1
+
+```sql
+SELECT DISTINCT students.name
+  FROM students
+  JOIN classes ON class_id = classes.id
+ WHERE date_part('year', year_of_birth) BETWEEN 1990 AND 1999
+   AND class.name = 'german';
+```
+
+## 2
+
+```sql
+SELECT DISTINCT students.name AS "Student", classes.name AS "Class Attended"
+  FROM students
+  JOIN classes ON class_id = classes.id
+ WHERE date_part('month', year_of_birth) = 2;
+```
+
+# 39
+
+Consider the schema below:
+
+```
+Table "public.birds"
+ Column  |         Type          | Collation | Nullable |              Default              
+---------+-----------------------+-----------+----------+-----------------------------------
+ id      | integer               |           | not null | nextval('birds_id_seq'::regclass)
+ name    | character varying(25) |           |          | 
+ age     | integer               |           |          | 
+ species | character varying(15) |           |          | 
+Indexes:
+    "birds_pkey" PRIMARY KEY, btree (id)
+```
+
+Let's say we alter the table with the following command:
+
+```sql
+ALTER TABLE birds ADD CHECK (age > 0);
+```
+
+Explain what this command does and where will the information be added to the schema?
+
+This command will add a `Check constraint` to the table which verifies that the whatever age inserted into the table is greater than `0`. If the input is not valid, a check constraint error will be thrown and the data will not be inserted into the table.
+
+Within the schema, the new constraint will create a new section below the schema table called `Check constraints`, to which this constraint will be added and named `birds_age_check`.
+
+# 40
+
+Consider the following `students` table:
+
+```
+ id | name  | year_of_birth | phone_num     | class_id 
+----+-------+---------------+---------------+---------
+  1 | Harry |  1987-02-04   |  909432987    |  1
+  2 | Ben   |  1976-11-13   |  099876567    |  2
+  3 | Marry |  1995-03-21   |  098787654    |  3
+  4 | Marry |  1995-03-21   |  908675356    |  2
+```
+
+Add the following constraints to the table:
+
+- If there is no `name` given `anonymous` should be added
+- `class_id` should always be greater than 0
+- `phone_num` should not allow duplicates
+- `year_of_birth` should be obligatory
+
+```sql
+ALTER TABLE students
+      ALTER COLUMN name SET DEFAULT 'anonymous',
+        ADD CHECK (class_id > 0),
+        ADD UNIQUE (phone_num),
+      ALTER COLUMN year_of_birth SET NOT NULL;
+```
+
+# 41
+
+Consider the code below. Will the following code result in an error, why?
+
+```sql
+CREATE TABLE some_table(
+  name varchar(50) CHECK(length(name)> 1)
+  last_name varchar(100)
+);
+
+INSERT INTO some_table (last_name) VALUES ('Ericsson');
+```
+
+This will not result in an error. Although a null value is inputed for the `name` column, which contains a `Check constraint`, PostgreSQL permits the inclusion. This is due to the way that the RDBMS hanldes null values. There is no value to compare against the check constraint, so the check is skipped. To prevent this, a `NOT NULL` constraint should be added to the column to ensure that null values are not inputted.
+
+# 42
+
+Consider the code snippet below. What SQL sub-language does this code present?
+
+```sql
+ALTER TABLE elephants
+	 DROP CONSTRAINT some_const;
+```
+
+This code snippet presents the **Data Defintiion Language** SQL sub-language, which is involved with altering the *structure* of a database or relation.
+
+# 43
+
+Consider the code snippet below. What SQL sub-language does this code present?
+
+```sql
+UPDATE elephants 
+	SET num_legs = 4
+	WHERE num_legs = 5;
+```
+
+This code snippet presents the **Data Management Language** SQL sub-language, which is involved with modifying the *data* stored within a database.
+
+# 44
+
+Consider the table below:
+
+```sql
+CREATE TABLE students (
+  id serial PRIMARY KEY,
+  name varchar(25),
+  age int 
+);
+
+INSERT INTO students (name, age) 
+  VALUES ('Mary', 11), ('John', 12), ('Valery', 12);
+```
+
+Will the following code result in an error? What is the code trying to do?
+
+```sql
+ALTER TABLE students
+ALTER COLUMN name TYPE varchar(1);
+```
+
+How about this code?
+
+```sql
+ALTER TABLE students 
+  ALTER COLUMN name TYPE varchar(100);
+```
+
+Yes, the first example will result in an error. Originally, the `name` column was set with a data type of `Varying Character` that can have up to `25` characters, all of which were in compliance. When changing the length down to `1`, `'Mary'` is now in breach, and therefore an error is thrown.
+
+The second example, however, would not. The max length of characters allowed increased, which all values will still be in compliance with. Only when the values break the character rule is an error thrown.
+
+# 45
+
+Consider the `students` below:
+
+```
+id | name  |year_of_birth|phone_num    | average_points 
+----+-------+---------------+---------------+---------
+ 1 | Harry | 1987-02-04 |  909432987   |  1
+ 2 | Ben   | 1976-11-13 |  099876567   |  6
+ 3 | Marry | 1995-03-21 |  098787654   |  7
+ 4 | Marry | 1995-03-21 |  908675356   |  0
+```
+
+The schema is as follows:
+
+```
+Table "public.students"
+     Column     |  Type   | Collation | Nullable |               Default                
+----------------+---------+-----------+----------+--------------------------------------
+ id             | integer |           | not null | nextval('students_id_seq'::regclass)
+ name           | text    |           | not null | 
+ year_of_birth  | text    |           |          | 
+ phone_num      | text    |           |          | 
+ average_points | integer |           |          | 
+Indexes:
+    "students_pkey" PRIMARY KEY, btree (id) 
+```
+
+- change `name` data type to take strings with max length of 50
+- change `year_of_birth` data type to `DATE`
+- change `phone_num` data type to be an integer
+- change `average_points` to be able to take decimal point numbers that must be greater than 0 but less than 10
+- add a new column called `highest_grade` that is obligatory and can take a string with max length of 1 character.
+- now change the data type of `highest_grade` to only accept one of the following characters: ('A', 'B', 'C', 'D', 'F')
+
+Remember that data is already inputted in the table.
+
+```sql
+ALTER TABLE students
+      ALTER COLUMN name TYPE varchar(50),
+      ALTER COLUMN year_of_birth TYPE date,
+      ALTER COLUMN phone_num TYPE int,
+      ALTER COLUMN average_points numeric,
+      ADD CHECK average_points > 0
+      ADD COLUMN highest_grade varchar(1) NOT NULL,
+      ADD CHECK (highest_grade IN ('A', 'B', 'C', 'D', 'F'));
+```
+
+
+

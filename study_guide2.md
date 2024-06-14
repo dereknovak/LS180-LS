@@ -19,13 +19,13 @@
     - [INSERT](#insert)
     - [UPDATE](#update)
     - [DELETE](#delete)
-- [Additional Statements](#additional-statements)
+- [Additional Commands](#additional-commands)
     - [GROUP BY](#group-by)
     - [ORDER BY](#order-by)
     - [WHERE](#where)
-    - [HAVING](#having) *******
-    - [LIMIT] *****
-    - [OFFSET] *****
+    - [HAVING](#having)
+    - [LIMIT](#limit)
+    - [OFFSET](#offset) **********
 - [Columns](#columns)
     - [Data Types](#data-types)
     - [NULL](#null)
@@ -56,7 +56,9 @@
     - [Surrogate Key](#surrogate-key)
     - [Primary Key](#primary-key)
     - [Foreign Key](#foreign-key)
-- [Sequences]
+- [Sequences](#sequences) ***********
+
+- [Indexes](#indexes)  ***********
 
 
 # General Terminology
@@ -106,7 +108,7 @@ https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
 
 ## CREATE
 
-- The `CREATE` statement is used to create structures within a database, including various tables or the database itself.
+- The `CREATE` command is used to create structures within a database, including various tables or the database itself.
 
 ```sql
 CREATE DATABASE database_name;
@@ -120,7 +122,7 @@ CREATE TABLE (
 
 ## ALTER
 
-- The `ALTER` statement is used to alter various aspects of a relation's schema.
+- The `ALTER` command is used to alter various aspects of a relation's schema.
 
 ```sql
 ALTER TABLE table_name
@@ -137,7 +139,7 @@ ALTER TABLE table_name
 
 ## DROP
 
-- The `DROP` statement is used to permanently remove a structure from a database, including the database itself.
+- The `DROP` command is used to permanently remove a structure from a database, including the database itself.
 
 ```sql
 DROP DATABASE database_name;
@@ -152,9 +154,9 @@ ALTER TABLE table_name
 
 ## SELECT
 
-- The `SELECT` statement is used to retrieve data from a database.
-- The `DISTINCT` statement can append it to prevent repetitive returns.
-- The `SELECT` statement can be used in conjuction with `FROM` to retrieve information from a specific relation, or be left alone to return independent data.
+- The `SELECT` command is used to retrieve data from a database.
+- The `DISTINCT` command can append it to prevent repetitive returns.
+- The `SELECT` command can be used in conjuction with `FROM` to retrieve information from a specific relation, or be left alone to return independent data.
 
 ```sql
 SELECT column_name FROM table_name;
@@ -166,7 +168,7 @@ SELECT 3 * 4;
 
 ## INSERT
 
-- The `INSERT` statement is used to insert data into a relation.
+- The `INSERT` command is used to insert data into a relation.
 - When used without specified column names, all columns will be used. Because of this, any default values must be dicated with `DEFAULT`.
 
 ```sql
@@ -182,7 +184,7 @@ VALUES (DEFAULT, 'value1', 'value2'),
 ## UPDATE
 https://launchschool.com/books/sql/read/update_and_delete_data
 
-- The `UPDATE` statement is used to permanently alter data that exists within a relation.
+- The `UPDATE` command is used to permanently alter data that exists within a relation.
 - Generally, it's good practice to run a query with `SELECT` before updating the data, as this change is permanent.
 
 ```sql
@@ -193,7 +195,7 @@ UPDATE table_name
 
 ## DELETE
 
-- The `DELETE` statement is used to permanently remove rows that exist within a relation.
+- The `DELETE` command is used to permanently remove rows that exist within a relation.
 - Generally, it's good practice to run a query with `SELECT` before deleting the data, as this change is permanent.
 
 ```sql
@@ -201,13 +203,13 @@ DELETE FROM table_name
  WHERE condition;
 ```
 
-# Additional Statements
+# Additional Commands
 
 ## GROUP BY
 https://launchschool.com/books/sql/read/more_on_select#groupby
 https://medium.com/@iandaustin/grokking-group-by-bd0bfd7082ea
 
-- The `GROUP BY` statement is used to group data in conjuction with an aggregate function.
+- The `GROUP BY` command is used to group data in conjuction with an aggregate function.
 
 ```sql
 SELECT column_name, function(column2_name)
@@ -217,7 +219,7 @@ SELECT column_name, function(column2_name)
 
 ## ORDER BY
 
-- The `ORDER BY` statement provides instructions on how data within the returned table should be ordered. The statement defaults to an ascending order, but can be modified by including `DESC`.
+- The `ORDER BY` command provides instructions on how data within the returned table should be ordered. The return defaults to an ascending order, but can be modified by including `DESC`.
 - If multiple rows share the same value, a second column name can be included to further organize the returned table, initially organizing by the first column, then by the second.
 
 ```sql
@@ -230,7 +232,7 @@ ORDER BY id DESC, column_name;
 
 ## WHERE
 
-- The `WHERE` statement uses a conditional statement to identify which data of a relation should be modified.
+- The `WHERE` command uses a conditional statement to identify which data of a relation should be modified.
 
 ```sql
 SELECT column_name FROM table_name
@@ -242,6 +244,34 @@ UPDATE table_name
 ```
 
 ## HAVING
+
+- The `HAVING` command filters the return of a `GROUP BY` clause, focused on groups of data as opposed to individual rows.
+
+```sql
+-- Returns a list of authors and their book-counts if they have over 5 books
+
+SELECT name, COUNT(book)
+  FROM authors
+ GROUP BY name
+HAVING COUNT(book) > 5;
+```
+
+## LIMIT
+
+- The `LIMIT` command returns a specified number of rows.
+
+```sql
+-- Returns the oldest person
+
+SELECT name, age
+  FROM people
+ ORDER BY age DESC
+ LIMIT 1;
+```
+
+## OFFSET
+
+- The `OFFSET` command
 
 # Columns
 
@@ -317,8 +347,15 @@ ALTER COLUMN column_name
 
 ```sql
 ALTER TABLE table_name
+ADD UNIQUE (column_name);
+
+ALTER TABLE table_name
 ALTER COLUMN column_name
   SET NOT NULL;
+
+ALTER TABLE table_name
+ALTER COLUMN column_name
+  SET DEFAULT "value";
 ```
 
 ### Others
@@ -405,11 +442,11 @@ https://launchschool.com/lessons/5ae760fa/assignments/2f3bc8f7
 # JOIN Statements
 https://launchschool.com/books/sql/read/joins
 
-- A `JOIN` statement creates a *transient table* by combining two separate relations connected through a foreign key.
+- A `JOIN` command creates a *transient table* by combining two separate relations connected through a foreign key.
 
 ## INNER JOIN
 
-- An `INNER JOIN` statement creates a transient table between two relations that includes only the rows where a definite match is made between the two columns used in the `ON` conditional statement.
+- An `INNER JOIN` command creates a transient table between two relations that includes only the rows where a definite match is made between the two columns used in the `ON` conditional statement.
 
 - Because the `INNER JOIN` is the most common method of joining relations, it can be aliased by simply using `JOIN`.
 
@@ -432,7 +469,7 @@ SELECT books.title, authors.name
 
 ## LEFT OUTER JOIN
 
-- A `LEFT OUTER JOIN`, or `LEFT JOIN`, statement creates a transient table between two relations that includes *all* rows from the left -- first included -- relation, and all matching data from the right -- second included -- relation. If no relationship has been established to the right relation, `NULL` will be used to represent the missing value.
+- A `LEFT OUTER JOIN`, or `LEFT JOIN`, command creates a transient table between two relations that includes *all* rows from the left -- first included -- relation, and all matching data from the right -- second included -- relation. If no relationship has been established to the right relation, `NULL` will be used to represent the missing value.
 
 ```sql
 SELECT books.title, authors.name
@@ -454,7 +491,7 @@ SELECT books.title, authors.name
 
 ## RIGHT OUTER JOIN
 
-- A `RIGHT OUTER JOIN`, or `RIGHT JOIN`, statement creates a transient table between two relations that includes *all* rows from the right -- second included -- relation, and all matching data from the left -- first included -- relation. If no relationship has been established to the left relation, `NULL` will be used to represent the missing value.
+- A `RIGHT OUTER JOIN`, or `RIGHT JOIN`, command creates a transient table between two relations that includes *all* rows from the right -- second included -- relation, and all matching data from the left -- first included -- relation. If no relationship has been established to the left relation, `NULL` will be used to represent the missing value.
 
 ```sql
 SELECT books.title, authors.name
@@ -476,7 +513,7 @@ SELECT books.title, authors.name
 
 ## FULL OUTER JOIN
 
-- A `FULL OUTER JOIN`, or `FULL JOIN`, statement creates a transient table between two relations that includes *all* rows from *both* relations, matching data based upon the columns used in the `ON` conditional statement. If no relationship has been established to either relation, `NULL` will be used to represent the missing value.
+- A `FULL OUTER JOIN`, or `FULL JOIN`, command creates a transient table between two relations that includes *all* rows from *both* relations, matching data based upon the columns used in the `ON` conditional statement. If no relationship has been established to either relation, `NULL` will be used to represent the missing value.
 
 ```sql
 SELECT books.title, authors.name
@@ -499,7 +536,7 @@ SELECT books.title, authors.name
 
 ## CROSS JOIN
 
-- A `CROSS JOIN` statement creates a transient table between two relations that includes *all possible relationships* between them. While uncommon, `CROSS JOIN`s are most useful when trying to discover every possible combinationof data, so anything that requires any kind of mixing will be relevant. This can include ingredients for a recipe or clothes for an outfit.
+- A `CROSS JOIN` command creates a transient table between two relations that includes *all possible relationships* between them. While uncommon, `CROSS JOIN`s are most useful when trying to discover every possible combinationof data, so anything that requires any kind of mixing will be relevant. This can include ingredients for a recipe or clothes for an outfit.
 
 ```sql
 SELECT books.title, authors.name
@@ -566,9 +603,7 @@ SELECT customers.name FROM customers
 
 ## Scalar Subqueries
 
-- A **scalar subquery** utilizes a subquery within the `SELECT` portion of the
-query. This allows parts of the outer query to be used within the inner
-subquery. It's important that this query only returns a single row/column.
+- A **scalar subquery** is one that only returns a single value -- one row and one value.
 
 ```sql
 SELECT name, (
@@ -632,3 +667,4 @@ CREATE TABLE table_name (
 
 # Sequences
 
+# Indexes

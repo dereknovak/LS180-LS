@@ -6,6 +6,8 @@
     - [SQL](#sql-structured-query-language)
     - [Relational Database](#relational-database)
     - [RDBMS](#rdbms) *******
+- [PostgreSQL](#postgresql)
+    - [Meta-Commands](#meta-commands)
 - [SQL Sub-Languages](#sql-sublanguages)
     - [DDL](#ddl-data-definition-language)
     - [DML](#dml-data-management-language)
@@ -28,6 +30,7 @@
     - [OFFSET](#offset) **********
 - [Columns](#columns)
     - [Data Types](#data-types)
+    - [New Type](#new-type)
     - [NULL](#null)
     - [New Column](#new-column)
     - [Change Data Type](#change-data-type)
@@ -56,8 +59,8 @@
     - [Surrogate Key](#surrogate-key)
     - [Primary Key](#primary-key)
     - [Foreign Key](#foreign-key)
-- [Sequences](#sequences) ***********
-
+- [Sequences](#sequences)
+    - [Sequence Commands](#sequence-commands)
 - [Indexes](#indexes)  ***********
 
 
@@ -77,6 +80,20 @@ https://launchschool.com/lessons/5ae760fa/assignments/074f64a8
 ## RDBMS
 
 - An **RDBMS** (Relational Database Management System) is an application used for managing relational databases by using SQL statements and queries to access or change information and schema within a database. Examples of RDBMSs include MySQL, PostgreSQL, MS SQL, and SQLite.
+
+# PostgreSQL
+
+### psql
+
+## Meta-Commands
+
+### \d
+
+### \dt
+
+### \c
+
+### \e
 
 # SQL Sublanguages
 
@@ -312,6 +329,16 @@ SELECT name, age
 - `boolean`
     - `true` or `false`
     - Displays abbreviated, but cannot insert as such
+
+## New Type
+
+```sql
+CREATE TYPE data_type_name AS ENUM ('O', 'B', 'A');
+
+ALTER TABLE table_name
+ALTER COLUMN column_name TYPE data_type_name
+                         USING column_name::data_type_name;
+```
 
 ## NULL
 
@@ -666,5 +693,92 @@ CREATE TABLE table_name (
 ```
 
 # Sequences
+https://launchschool.com/lessons/a1779fd2/assignments/00e428da
+
+- A **sequence** is a unique form of relation that is used to generate a series of unique numbers, storing information about the previous number used and automatically incrementing it according to a set of rules.
+
+- A sequence's primary role is to automatically assign a surrogate key to a row, allowing each row to contain a unique identifier.
+
+```sql
+CREATE TABLE colors (id serial, name text)
+
+-- Interpreted as...
+
+CREATE SEQUENCE colors_id_seq;
+CREATE TABLE colors (
+  id int NOT NULL DEFAULT nextval('colors_id_seq'),
+  name text
+);
+```
+
+## Sequence Commands
+
+### INCREMENT BY
+
+- The `INCREMENT BY` command is used to increment a sequence using a unique algorithm.
+
+```sql
+CREATE SEQUENCE odd_counter INCREMENT BY 2;
+
+SELECT nextval('odd_counter');
+/*
+ nextval
+---------
+       1
+(1 row)
+*/
+
+SELECT nextval('odd_counter');
+/*
+ nextval
+---------
+       3
+(1 row)
+*/
+```
+
+### MINVALUE
+
+- The `MINVALUE` command specifies a starting value for a sequence.
+
+```sql
+CREATE SEQUENCE large_counter MINVALUE 100;
+
+SELECT nextval('large_counter');
+/*
+ nextval
+---------
+     100
+(1 row)
+*/
+
+SELECT nextval('large_counter');
+/*
+ nextval
+---------
+     101
+(1 row)
+*/
+```
 
 # Indexes
+
+# Addition Information
+
+- `*` is a special *wildcard character*
+- The `||` is used for string concatenation
+- `LIKE`
+    - `%` is used for string boundaries
+        - `'%Park'`
+            - Jurrasic Park
+            - Chase Park
+            - X Parking
+    - `_` is used to skip a letter
+        - `'Se_en'`
+            - Seven
+            - Se7en
+            - X Seen
+- `BETWEEN` includes both numbers used.
+    - For text, it's up to and including unless there are more letters afterwards
+        - `BETWWEN 'A' AND 'J'`
+            - Inlucdes `'J'` but not `'Jaws'`

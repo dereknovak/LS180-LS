@@ -342,7 +342,7 @@ ALTER COLUMN column_name TYPE data_type_name
 
 ## NULL
 
-- In SQL, `NULL` does not represent a value, but rather the absense of a value. Because of this, the expression `column_name = NULL` is syntactically incorrect; instead, the column `IS NULL` or `IS NOT NULL`.
+- In SQL, `NULL` does not represent a value, but rather the absence of a value. Because of this, the expression `column_name = NULL` is syntactically incorrect; instead, the column `IS NULL` or `IS NOT NULL`.
 
 ```sql
 SELECT column_name FROM table_name
@@ -648,7 +648,7 @@ SELECT name, (
 
 ## Surrogate Key
 
-- A **surragate key** is a value *specifically created* to identify a set of data within a relation. This value never changes and will always be tied to its respective data.
+- A **surrogate key** is a value *specifically created* to identify a set of data within a relation. This value never changes and will always be tied to its respective data.
 
 ## Primary Key
 
